@@ -2,7 +2,7 @@ import numpy as np
 s = lambda x, y, i, j: -2 if x[i] != y[j] else 1
 g = -2
 
-def traceback(matrix, n, m,x,y):
+def traceback(matrix, n, m, x, y, edit_transcript):
     if m <= 0 or n <=  0:
         return
 
@@ -15,18 +15,18 @@ def traceback(matrix, n, m,x,y):
 
     choise = max(align, delete, insert)
     if x[n-1] == y[m-1]:
-        instructions.insert(0, "M")
-        return traceback(matrix, n-1, m-1,x,y)
+        edit_transcript.insert(0, "M")
+        return traceback(matrix, n-1, m-1, x, y, edit_transcript)
     else:
         if(choise == align):
-            instructions.insert(0, "R")
-            return traceback(matrix, n-1, m-1,x,y)
+            edit_transcript.insert(0, "R")
+            return traceback(matrix, n-1, m-1, x, y, edit_transcript)
         elif(choise == delete):
-            instructions.insert(0, "D")
-            return traceback(matrix, n-1, m,x,y)
+            edit_transcript.insert(0, "D")
+            return traceback(matrix, n-1, m, x, y, edit_transcript)
         else:
-            instructions.insert(0, "I")
-            return traceback(matrix, n, m-1,x,y)
+            edit_transcript.insert(0, "I")
+            return traceback(matrix, n, m-1, x, y, edit_transcript)
 
 
 def initialize_matrix(x, y):
@@ -49,13 +49,21 @@ def initialize_matrix(x, y):
 
             matrix[i][j] = max(align, delete, insert)
 
-    traceback(matrix, len(x), len(y),x,y)
-    return instructions
+    return matrix
+    # traceback(matrix, len(x), len(y), x, y)
+    # return instructions
 
-instructions = []
+def get_edit_transcript(matrix, edit_transcript):
+    traceback(matrix, len(x), len(y), x, y, edit_transcript)
+    return edit_transcript
+
+
 y='FMDTPLNE'
 x='FKHMEDPLE'
 'ATCGT'
 'TGGTG'
-instructions = initialize_matrix(x, y)
-print(instructions)
+edit_transcript = []
+
+matrix = initialize_matrix(x, y)
+edit_transcript = get_edit_transcript(matrix, edit_transcript)
+print(edit_transcript)
