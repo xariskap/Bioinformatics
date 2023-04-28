@@ -58,6 +58,7 @@ def get_edit_transcript(matrix, edit_transcript):
 
 
 if __name__ == "__main__":
+    
     y='FMDTPLNE'
     x='FKHMEDPLE'
     
