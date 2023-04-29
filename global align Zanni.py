@@ -82,8 +82,16 @@ class globalAlign:
                 case 'D':
                     st2.append('-')
                     st1.append(self.str1[-1])
-                    self.str1= self.str1[:-1]   
-        print(f'\nStr1 {"".join(st1[::-1])}\nStr2 {"".join(st2[::-1])}')
+                    self.str1= self.str1[:-1]  
+
+        symbols = []
+        for i in range(len(st1)):
+            if st1[i] == st2[i]:
+                symbols.insert(0,"|")
+            else:
+                symbols.insert(0," ")
+
+        print(f'{" ".join(st1[::-1])}\n{" ".join(symbols)}\n{" ".join(st2[::-1])}')
 
 if __name__ == "__main__":
     

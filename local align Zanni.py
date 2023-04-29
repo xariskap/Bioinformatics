@@ -3,7 +3,7 @@ import test
 s = lambda x, y, i, j: -1 if x[i] != y[j] else 1
 g = -1
 
-class globalAlign:
+class LocalAlign:
     def __init__(self,str1,str2):
         self.str1,self.str2 =str1, str2
         self.N,self.M = len(str2),len(str1)
@@ -68,12 +68,21 @@ class globalAlign:
                 
                 self.st2.append(self.str2[m-1])
                 return self.traceback(n,m-1)
+    
+    def stringAlign(self):
+        symbols = []
+        for i in range(len(self.st1)):
+            if self.st1[i] == self.st2[i]:
+                symbols.insert(0,"|")
+            else:
+                symbols.insert(0," ")
+        print(f'{" ".join(self.st1[::-1])}\n{" ".join(symbols)}\n{" ".join(self.st2[::-1])}')
+
 
 if __name__ == "__main__":
     
     y='ATATCGACGA'
     x='ATCCGAGAATT'
-    temp = globalAlign(x,y)
-
-    print(temp.edit_transcript)
-    print(f'Str1: {"".join(temp.st1[::-1])}\nStr2: {"".join(temp.st2[::-1])}')
+    temp = LocalAlign(x,y)
+    temp.stringAlign()
+    
