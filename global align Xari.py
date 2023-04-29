@@ -1,5 +1,5 @@
 import numpy as np
-s = lambda x, y, i, j: -2 if x[i] != y[j] else 1
+sigma = lambda x, y, i, j: -2 if x[i] != y[j] else 1
 g = -2
 
 def traceback(matrix, n, m, x, y, edit_transcript):
@@ -9,7 +9,7 @@ def traceback(matrix, n, m, x, y, edit_transcript):
     matrix = matrix[:n+1,:m+1]
     print(matrix)
 
-    align = matrix[n-1][m-1] + s(x, y, n-1, m-1)
+    align = matrix[n-1][m-1] + sigma(x, y, n-1, m-1)
     delete = matrix[n-1][m] + g
     insert = matrix[n][m-1] + g
 
@@ -43,11 +43,11 @@ def initialize_matrix(x, y):
     for i in range(1, m + 1):
         for j in range(1, n + 1):
             
-            align = matrix[i-1][j-1] + s(x, y, i-1, j-1)
-            delete = matrix[i-1][j] + g
-            insert = matrix[i][j-1] + g
+            diagonal = matrix[i-1][j-1] + sigma(x, y, i-1, j-1)
+            left = matrix[i-1][j] + g
+            above = matrix[i][j-1] + g
 
-            matrix[i][j] = max(align, delete, insert)
+            matrix[i][j] = max(diagonal, left, above)
 
     return matrix
 
