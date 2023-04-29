@@ -1,6 +1,7 @@
 import numpy as np
-s = lambda x, y, i, j: -2 if x[i] != y[j] else 1
-g = -2
+import test 
+s = lambda x, y, i, j: -1 if x[i] != y[j] else 1
+g = -1
 
 class globalAlign:
     def __init__(self,str1,str2):
@@ -8,17 +9,19 @@ class globalAlign:
         self.N,self.M = len(str2),len(str1)
         self.Matrix = self.initialize_matrix()
         self.edit_transcript =[]
-        self.result = self.traceback(self.M,self.N)
+        self.st1,self.st2 = [],[]
+        m,n = test.getMax(self.Matrix)
+        self.result = self.traceback(m,n)
 
     def initialize_matrix(self):
         m,n = self.M,self.N
         matrix = np.zeros((m+1, n+1))
 
         for i in range(1, m + 1):
-            matrix[i][0] = i * g
+            matrix[i][0] =0
 
         for j in range(1, n + 1):
-            matrix[0][j] = j * g
+            matrix[0][j] = 0
 
         for i in range(1, m + 1):
             for j in range(1, n + 1):
@@ -27,14 +30,15 @@ class globalAlign:
                 delete = matrix[i-1][j] + g
                 insert = matrix[i][j-1] + g
 
-                matrix[i][j] = max(align, delete, insert)
+                matrix[i][j] = max(0,align, delete, insert)
 
         return matrix
     def traceback(self,n,m):
-
-        matrix = self.Matrix
         
+        matrix = self.Matrix
         if m <= 0 or n <=  0:
+            return
+        if matrix[n][m] == 0:
             return
 
         matrix = matrix[:n+1,:m+1]
@@ -45,7 +49,8 @@ class globalAlign:
         choise = max(align, delete, insert)
         if x[n-1] == y[m-1]:
             self.edit_transcript.insert(0, "M")
-            
+            self.st1.append(self.str1[n-1])
+            self.st2.append(self.str2[m-1])
             return self.traceback(n-1,m-1)
         else:
             if(choise == align):
@@ -54,40 +59,21 @@ class globalAlign:
                 return self.traceback(n-1,m-1)
             elif(choise == delete):
                 self.edit_transcript.insert(0, "D")
-                
+                self.st2.append('-')
+                self.st1.append(self.str1[n-1])
                 return self.traceback(n-1,m)
             else:
                 self.edit_transcript.insert(0, "I")
+                self.st1.append('-')
                 
+                self.st2.append(self.str2[m-1])
                 return self.traceback(n,m-1)
-
-    def stringAlign(self):
-        st1 = []
-        st2=[]
-        for ele in self.edit_transcript[::-1]:
-            if len(self.str1)<=0 or len(self.str2)<=0:
-                break
-            match ele:
-                case 'M':
-                    st1.append(self.str1[-1])
-                    st2.append(self.str2[-1])
-                    self.str1 = self.str1[:-1]
-                    self.str2= self.str2[:-1]
-                case 'I':
-                    st1.append('-')
-                    st2.append(self.str2[-1])
-                    self.str2= self.str2[:-1]
-                        
-                    
-                case 'D':
-                    st2.append('-')
-                    st1.append(self.str1[-1])
-                    self.str1= self.str1[:-1]   
-        print(f'\nStr1 {"".join(st1[::-1])}\nStr2 {"".join(st2[::-1])}')
 
 if __name__ == "__main__":
     
-    y='FMDTPLNE'
-    x='FKHMEDPLE'
+    y='ATATCGACGA'
+    x='ATCCGAGAATT'
     temp = globalAlign(x,y)
-    temp.stringAlign()
+
+    print(temp.edit_transcript)
+    print(f'Str1: {"".join(temp.st1[::-1])}\nStr2: {"".join(temp.st2[::-1])}')
