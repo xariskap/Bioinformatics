@@ -1,5 +1,4 @@
 import numpy as np
-import test 
 s = lambda x, y, i, j: -1 if x[i] != y[j] else 1
 g = -1
 
@@ -10,7 +9,7 @@ class LocalAlign:
         self.Matrix = self.initialize_matrix()
         self.edit_transcript =[]
         self.st1,self.st2 = [],[]
-        m,n = test.getMax(self.Matrix)
+        m,n = self.getMax(self.Matrix)
         self.result = self.traceback(m,n)
 
     def initialize_matrix(self):
@@ -68,6 +67,12 @@ class LocalAlign:
                 
                 self.st2.append(self.str2[m-1])
                 return self.traceback(n,m-1)
+    
+    def getMax(self, matrix):
+
+        row, column = np.unravel_index(matrix.argmax(), matrix.shape)
+        return row, column
+    
     
     def stringAlign(self):
         symbols = []
