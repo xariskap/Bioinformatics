@@ -2,6 +2,7 @@ import numpy as np
 s = lambda x, y, i, j: -1 if x[i] != y[j] else 1
 g = -1
 
+
 class LocalAlign:
     def __init__(self,str1,str2):
         self.str1,self.str2 =str1, str2
@@ -9,8 +10,10 @@ class LocalAlign:
         self.Matrix = self.initialize_matrix()
         self.edit_transcript =[]
         self.st1,self.st2 = [],[]
-        m,n = self.getMax(self.Matrix)
-        self.result = self.traceback(m,n)
+        self.score = 0
+        m, n = self.getMax(self.Matrix)
+        self.result = self.traceback(m, n)
+        
 
     def initialize_matrix(self):
         m,n = self.M,self.N
@@ -31,6 +34,7 @@ class LocalAlign:
 
                 matrix[i][j] = max(0,align, delete, insert)
 
+        print(matrix)
         return matrix
     def traceback(self,n,m):
         
@@ -48,9 +52,11 @@ class LocalAlign:
         choise = max(align, delete, insert)
         if x[n-1] == y[m-1]:
             self.edit_transcript.insert(0, "M")
+            self.score += 1
             self.st1.append(self.str1[n-1])
             self.st2.append(self.str2[m-1])
             return self.traceback(n-1,m-1)
+            
         else:
             if(choise == align):
                 self.edit_transcript.insert(0, "R")
@@ -81,7 +87,8 @@ class LocalAlign:
                 symbols.insert(0,"|")
             else:
                 symbols.insert(0," ")
-        print(f'{" ".join(self.st1[::-1])}\n{" ".join(symbols)}\n{" ".join(self.st2[::-1])}')
+        print(f'\n{" ".join(self.st1[::-1])}\n{" ".join(symbols)}\n{" ".join(self.st2[::-1])}')
+        print(f"\nThe matching score is {self.score}\n")
 
 
 if __name__ == "__main__":
@@ -90,4 +97,5 @@ if __name__ == "__main__":
     x='ATCCGAGAATT'
     temp = LocalAlign(x,y)
     temp.stringAlign()
+
     
