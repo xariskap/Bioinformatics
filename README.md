@@ -5,4 +5,4 @@
 **local_align.py** is the Smith–Waterman algorithm
 
 
-**ex4_2.py** solves the following problem in Θ(k*n): Given two strings with size n, find all the corresponding matches of all possible k-length substrings. 
+**ex4_2.py** solves the following problem in Θ(k*n): Given two strings with size n, find all the corresponding character matches of all possible k-length substrings. 
